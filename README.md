@@ -36,7 +36,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "glofdatabase_2023_12_06.ods" (table with all reported GLOFs. Compiliation as of December 06, 2023)
 - Randolph Glacier Inventory V6.0 (https://www.glims.org/RGI/rgi60_dl.html)
 
-*Main outputs*: 
+*Outputs*: 
 - "all_glofs_tibble.RDS" (R-object of all reported GLOFs in the global GLOF database; data are not trimmed to the period 1990-2023)
 - "la_sf.RDS" (R-object containing all GLOFs with mapped lake areas before the outburst in the period 1990-2023)
 - "Qp_V0_plot.pdf" (Four-panel scatterplot of peak discharge and flood volumes versus lake area before the GLOF and GLOF-related losses in lake area) 
@@ -50,7 +50,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 *Mandatory input data*: 
 - The complete RGI V6.0 in ESRI shapefile format.
 
-*Main outputs*: 
+*Outputs*: 
 - "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions in ESRI shapefile format) 
 - "*RegionXYZ*_buffer.shp" (Separate buffers around glaciers for the 13 study regions in ESRI shapefile format)
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
@@ -67,7 +67,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "RGI-wide_composites_stats_GV.txt" (A text table storing the mean thickness ("Hcomp") of each glacier glacier according to its RGIId. Data provided by Daniel Farinotti.)
 - "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
 
-*Output*: 
+*Outputs*: 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "reported_GLOFs_with_geometry.rds" (R-object containing a *simple features* (sf) object of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "reg_invs_bind.rds" (A table of all glaciers in each region that had an estimate of ice thickness)
@@ -83,7 +83,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "*RegionXX*_rgi60_pergla_rates.csv" (Regional rate of glacier elevation change between 2000 and 2020, data are from Hugonnet et al., 2021, https://doi.org/10.6096/13)
 
-*Output*: 
+*Outputs*: 
 - "regional_trends_ice_dammed_lakes.pdf" (Figure showing the change in GLOF size from ice-dammed dammed lakes between 1990 and 2023 for each region)
 - "dhdt_vs_glacier_dammed_lake_area.pdf" (A two-panel figure showing the relationship between the trend in GLOF size and glacier elevation change)
 - "local_trends_idl.pdf" (A multi-panel figure showing the trend in GLOF size for all glacier-dammed lakes between 1990 and 2023)
@@ -100,37 +100,44 @@ Each script will produce output in form of a figure (displayed in the associate 
 *Mandatory input data*: 
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
 - Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
-- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously prublished glacier lake inventories, including the study, year and satellite image used to map glacier lakes)
+- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously prublished glacier lake inventories, including reference to the underlying study, year, and satellite image used to map glacier lakes)
 
-*Major outputs*: 
+*Outputs*: 
 - "UTMArea_XXX" (Glacier lake outlines split to the extent of the 13 study region. Individual lake areas are calculated in the local UTM projection)
 - "lakes_per_region.rds" (R-object of rates of lake growth in each region)
 - "lake_area_change.pdf" (Figure showing the rate of lake area change in each region)
 
 ---
 
-### 06_magnitudes_vs_elev_change.R
+### 06_Burst_lakes_and_their_neighbors.R
 
-**Script to estimate local trends of  V<sub>0</sub> and  Q<sub>p</sub> with elevation change of the glacier dam.**
+**Script to calculate distances between burst lakes and their neighbours.**
 
 *Mandatory input data*: 
-
-- Folder "dh_pergla_cut" (Tables of cumulative elevation change (in m) for glaciers with repeat GLOFs between 2000 and 2019)
-- "all_glofs_tibble.RDS" (R-object with a preprocessed table of all reported GLOFs)
-- "all_glofs_V0_tibble.RDS" (Table of lakes with repeat GLOFs and reported V<sub>0</sub>)
-- "all_glofs_qp_tibble.RDS" (Table of lakes with repeat GLOFs and reported Q<sub>p</sub>)
-- Folder "Region_extents" (Contains the ESRI shapefile *Extent_pol.shp* to display the extent of the study regions)
+- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
+- "reported_GLOFs_with_geometry.rds" (R-object containing a *simple features* (sf) object of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
+- Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
 
 *Output*: 
 
-- "local_Qp_vs_dhdt_model.RDS" (R-Object containing a hierarchical model of local changes in Q<sub>p</sub> versus glacier elevation change)
-- "local_V0_vs_dhdt_model.RDS" (R-Object containing a hierarchical model of local changes in V<sub>0</sub> versus glacier elevation change)
-- "map_and_trends.pdf" (Map of lakes with repeat GLOFs between 2000 and 2019; local trends of V<sub>0</sub> and Q<sub>p</sub> with cumulative changes in glacier dam elevation)
-- "dam_thinning_rats.shp" (ESRI shapefile showing mean annual elevation change of glacier dams with repeat outbursts between 2000 and 2019)
-- "elev_change_per_glacier.pdf" / "elev_change_per_glacier.png" (Plot of cumulative elevation change for each glacier that produced repeated GLOFs between 2000 and 2019)
+- "distances_plot.pdf" (Figure showing the distances to the next intact glacier lake per region) 
 
 ---
 
+### 07_Limits_to_increasing_GLOF_sizes.r
+
+**Script to extract all lakes >1km² from previous lake inventories and assess limits to increasing GLOF sizes.**
+
+*Mandatory input data*: 
+- Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
+- "lakes_gt_1km.gpkg" (All lakes >1km² as of 2015 or later, labelled with descriptors of their geometries)
+
+*Output*: 
+
+- "lakes_gt_1km.gpkg" (All lakes >1km² as of 2015 or later, need to be manually labelled with their geometric properties)
+- "glof_predictors_plot.pdf" (Figure showing the geometric characteristics of lakes >1 km²) 
+
+---
 
 ## Input data
 
@@ -139,7 +146,7 @@ Please visit the repository on Zenodo to obtain the input files.
 
 ## References
 
-Georg Veh1, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite globally growing glacier lakes*. Submitted
+Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite globally growing glacier lakes*. Submitted
 
 
 ## See also
