@@ -5,72 +5,62 @@
 
 **This repository contains seven scripts to estimate trends in the volume (*V*<sub>0</sub>), peak discharge (*Q*<sub>p</sub>), timing (day of year *doy*), and source elevation (*Z*) of ice-dam failures on regional and local (i.e. lake-) level. In addition, we investigate the consequences of melting glacier dams on the magnitudes of GLOFs.**
 
-- [01_preprocessing.R](#01_lake_area_volumer)
-- [02_trends_in_Qp_and_V0.R](#02_trends_in_qp_and_v0r)
-- [03_trends_in_doy.R](#03_trends_in_doyr)
-- [04_glacier_volumes_and_ice_loss.R](#04_glacier_volumes_and_ice_lossr)
-- [05_trends_in_Z.R](#05_trends_in_zr)
-- [06_magnitudes_vs_elev_change.R](#06_magnitudes_vs_elev_changer)
-- [summary_stats_veh_revision.py](#summary_stats_veh_revisionpy)
+- [01_GLOF_preprocessing.R](#01_glof_preprocessingr)
+- [02_generate_glacier_buffers.R](#02_generate_glacier_buffersr)
+- [03_GLOF_rate_ice_thickness_and_length.R](#03_glof_rate_ice_thickness_and_lengthr)
+- [04_Trends_in_GLOF_size.R](#04_trends_in_glof_sizer)
+- [05_Rates_of_lake_growth.R](#05_rates_of_lake_growthr)
+- [06_Burst_lakes_and_their_neighbors.R](#06_burst_lakes_and_their_neighborsr)
+- [07_Limits_to_increasing_GLOF_sizes.r](#07_limits_to_increasing_glof_sizesr)
 
-The codes are written in the statistical programming language **R** (https://www.r-project.org/), Version 4.2.0, and called within
-the Graphical User Interface **RStudio** (https://rstudio.com) under a Microsoft Windows 10 operating system. 
+The codes are written in the statistical programming language **R** (https://www.r-project.org/), Version 4.2.2, and called within
+the Graphical User Interface **RStudio** (https://posit.co/downloads/) under a Microsoft Windows 10 operating system. 
 Please install both **R and RStudio** on your machine to successfully run the codes and produce figures and R data objects.
 
 The R codes depend on a number of packages, listed at the beginning of all scripts. Please install those packages before running the scripts. 
 The comments within the scripts provide further details on model dependencies and usage of functions. 
 
 Each script will call one or more input data object(s), which are available via ***Zenodo***.  
-We also use freely available digital elevation models (DEMs), glaciological data (glacier outlines, estimates of ice thickness and mass loss), and lake outlines. Please download the data from the web sources provided in the scripts.  
-Please put all input files into the same folder, and change the folder used in the script to your folder structure. The scripts can be executed one after the other, with the user generating output that is used as input for the next script.
+We also use data on glacier outlines and previously published lake outlines. Please download the data from the web sources provided in the scripts.  
+Please put all input files into the same folder, and change the working directory (which is set at beginning of each the script) according to your folder structure. The scripts can be executed one after the other, with the user generating output that is used as input for the next script.
 The scripts (and parts thereof) can also be run independent of each other using the input files (in most cases *.RDS* files) from Zenodo.
 Each script will produce output in form of a figure (displayed in the associate manuscript and Extended Data figures) or R-objects.
 
 ## Scripts
 
-### 01_preprocessing.R
+### 01_GLOF_preprocessing.R
 
 **Script to preprocess a raw OpenOffice table of reported glacier lake outburst floods.**
 
 *Mandatory input data*: 
-- "Global_GLOF_database_2022_05_30.ods" (table with all reported GLOFs. Compiliation as of May 30, 2022)
-- CRU TS V4.05 temperature data
+- "glofdatabase_2023_12_06.ods" (table with all reported GLOFs. Compiliation as of December 06, 2023)
+- Randolph Glacier Inventory V6.0 (https://www.glims.org/RGI/rgi60_dl.html)
 
 
 *Main outputs*: 
-- "all_glofs_tibble.RDS" (R-object of all reported GLOFs in the global GLOF database)
-- "all_glofs_V0_tibble.RDS" (R-object of all GLOFs that have reported values of *V*<sub>0</sub>)
-- "all_glofs_qp_tibble.RDS" (R-object of all GLOFs that have reported values of *Q*<sub>p</sub>)
-- "glof_reporting.pdf" (Multi-panel histogram of reported values of all reported GLOFs, reported values of Qp, and reported values of V0 from ice-dammed lakes) 
-- "temp_doy_histogram.pdf" (histogram that both shows the number of reported GLOFs and the mean air temperature in a given month)
+- "all_glofs_tibble.RDS" (R-object of all reported GLOFs in the global GLOF database; data are not trimmed to the period 1990-2023)
+- "la_sf.RDS" (All GLOFs with mapped lake areas before the outburst in the period 1990-2023)
+- "Qp_V0_plot.pdf" (Four-panel scatterplot of peak discharge and flood volumes versus lake area before the GLOF and GLOF-related losses in lake area) 
 
 ---
 
-### 02_trends_in_Qp_and_V0.R
+### 02_generate_glacier_buffers.R
 
-**Script to fit quantile regression models (50th and 90th percentile) of peak discharges *Q*<sub>p</sub> and volumes *V*<sub>0</sub> versus time 
-from ice-dam failures in six mountain ranges.**
+**Script to generate a 5-km buffer around glaciers in the RGI V6.0.**
 
 *Mandatory input data*: 
-- "all_glofs_V0_tibble.RDS" (R-object of all GLOFs that have reported values of *V*<sub>0</sub>)
-- "all_glofs_qp_tibble.RDS" (R-object of all GLOFs that have reported values of *Q*<sub>p</sub>)
+- The complete RGI V6.0 in ESRI shapefile format.
 
 *Main outputs*: 
-- "qp_models.RDS" (R-object with regional quantile regression models of *Q*<sub>p</sub> versus time for the 50th and 90th for 4 time periods)
-- "V0_models.RDS" (R-object with regional quantile regression models of *V*<sub>0</sub> versus time for the 50th and 90th for 4 time periods)
-- "fig2.pdf" (PDF figure containing the regional posterior slopes for *Q*<sub>p</sub> and *V*<sub>0</sub> for two different time periods)
-- "all_pooled_mods.pdf" (PDF figure containing the pooled trendes of *Q*<sub>p</sub> and *V*<sub>0</sub> for two different time periods)
-- "qp_model_median_local.RDS"  (R-object with local quantile regression models of median *Q*<sub>p</sub> versus time)
-- "Qp_local.pdf" (PDF figure showing temporal trends of median *Q*<sub>p</sub> for individual glacier lakes) 
-- "V0_model_median_local.RDS"  (R-object with regional quantile regression models of median *V*<sub>0</sub> versus time)
-- "V0_local.pdf" (PDF figure showing temporal trends of median *V*<sub>0</sub> for individual glacier lakes) 
-- "local_posterior_trends.pdf" (PDF figure showing posterior distributions of the trends in local *Q*<sub>p</sub> and V*<sub>0</sub>)
+- "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions) 
+- "*RegionXYZ*_buffer.shp") (Buffers around glaciers for the 13 study regions in ESRI shapefile format)
+- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed)
 
 ---
 
-### 03_trends_in_doy.R
+### 03_GLOF_rate_ice_thickness_and_length.R
 
-**Script to estimate trends in the annual timing (*doy*, i.e. day in a given year) of ice-dam failures on regional and local scale.**
+**Script to calculate the regional GLOF rate, local glacier thicknesses and glacier length. Those diagnostics are compared to the size of burst lakes.**
 
 *Mandatory input data*: 
 - "all_glofs_tibble.RDS" (R-object with a preprocessed table of all reported GLOFs)
@@ -140,10 +130,6 @@ from ice-dam failures in six mountain ranges.**
 
 ---
 
-### summary_stats_veh_revision.py
-
-**Script by Romain Hugonnet to obtain elevation changes from glacier dams. Please contact Romain Hugonnet, if you have further questions.**
-
 
 ## Input data
 
@@ -152,11 +138,12 @@ Please visit the repository on Zenodo to obtain the input files.
 
 ## References
 
-Georg Veh, Natalie Lützow, Jenny Tamm, Lisa V. Luna, Romain Hugonnet, Kristin Vogel, Marten Geertsema, John J Clague, and Oliver Korup: *Less extreme and earlier outbursts from ice-dammed lakes since 1900*. Nature, 614, 701–707, https://doi.org/10.1038/s41586-022-05642-9.
+Georg Veh1, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite globally growing glacier lakes*. Submitted
+
 
 ## See also
 
-http://glofs.geoecology.uni-potsdam.de
+[The Glacier Lake Outburst Flood Database V4.0](http://glofs.geoecology.uni-potsdam.de)
 
 ## Contact
 
