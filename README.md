@@ -11,7 +11,7 @@
 - [04_Trends_in_GLOF_size.R](#04_trends_in_glof_sizer)
 - [05_Rates_of_lake_growth.R](#05_rates_of_lake_growthr)
 - [06_Burst_lakes_and_their_neighbors.R](#06_burst_lakes_and_their_neighborsr)
-- [07_Limits_to_increasing_GLOF_sizes.r](#07_limits_to_increasing_glof_sizesr)
+- [07_Limits_to_increasing_GLOF_sizes.R](#07_limits_to_increasing_glof_sizesr)
 
 The codes are written in the statistical programming language **R** (https://www.r-project.org/), Version 4.2.2, and called within
 the Graphical User Interface **RStudio** (https://posit.co/downloads/) under a Microsoft Windows 10 operating system. 
@@ -124,7 +124,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 ---
 
-### 07_Limits_to_increasing_GLOF_sizes.r
+### 07_Limits_to_increasing_GLOF_sizes.R
 
 **Script to extract all lakes >1km² from previous lake inventories and assess limits to increasing GLOF sizes.**
 
