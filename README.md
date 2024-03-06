@@ -53,7 +53,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 *Outputs*: 
 - "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions in ESRI shapefile format) 
 - "*RegionXYZ*_buffer.shp" (Separate buffers around glaciers for the 13 study regions in ESRI shapefile format)
-- "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
+- "dissolved_buffer.shp" / "dissolved_buffer.RDS" (All buffers around glaciers as one ESRI shapefile / R-object)
 - "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
 
 ---
