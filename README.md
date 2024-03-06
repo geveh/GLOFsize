@@ -52,7 +52,8 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 *Main outputs*: 
 - "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions in ESRI shapefile format) 
-- "*RegionXYZ*_buffer.shp") (Buffers around glaciers for the 13 study regions in ESRI shapefile format)
+- "*RegionXYZ*_buffer.shp" (Separate buffers around glaciers for the 13 study regions in ESRI shapefile format)
+- "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
 - "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
 
 ---
@@ -65,7 +66,6 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "la_sf.RDS" (R-object containing all GLOFs with mapped lake areas before the outburst in the period 1990-2023)
 - "RGI-wide_composites_stats_GV.txt" (A text table storing the mean thickness ("Hcomp") of each glacier glacier according to its RGIId. Data provided by Daniel Farinotti.)
 - "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
-- 
 
 *Output*: 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
@@ -93,21 +93,19 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 ---
 
-### 05_trends_in_Z.R
+### 05_Rates_of_lake_growth.R
 
-**Script to estimate regional trends in the source elevation (*Z*) of ice-dammed failures.**
+**Script to calculate regional rates of glacier lake growth.**
 
 *Mandatory input data*: 
-- Digital Elevation models from ALOS World 3D - 30m (AW3D30)
-- Files from the "GDL_database" (We created a merged lake inventory in ESRI shapefile format from regional lake databases. This lake database is available upon request)   
-- "Regional_glacier_and_melt_volumes.rds" (R-object containing the total volume of glacier volume and volume change between 2000 and 2019 in 100-m elevation bins)
+- "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
+- Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
+- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously prublished glacier lake inventories, including the study, year and satellite image used to map glacier lakes)
 
 *Major outputs*: 
-- "gdl_database_centroid.RDS" (R-object of glacier lake centroids in the six study regions)
-- "glofs_ice_with_z.RDS" (R-object of first reported GLOF from a given lake and its elevation)
-- "Z_trends_per_region.RDS" (R-object with a hierarchical regression models of *Z* versus time for dated GLOFs in the six regions between 1900 and 2021)
-- "elev_trend.pdf" (Plot of the change in GLOF source elevation for six regions between 1900 and 2021, including the posterior regression slope)
-- "Lake_GLOF_elevation.pdf" / "Lake_GLOF_elevation.png" (Plot of the elevation distribution of historic burst ice-dammed lakes and present-day ice-dammed lakes for six regions between 1900 and 2021)
+- "UTMArea_XXX" (Glacier lake outlines split to the extent of the 13 study region. Individual lake areas are calculated in the local UTM projection)
+- "lakes_per_region.rds" (R-object of rates of lake growth in each region)
+- "lake_area_change.pdf" (Figure showing the rate of lake area change in each region)
 
 ---
 
