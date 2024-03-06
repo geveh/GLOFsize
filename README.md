@@ -3,7 +3,7 @@
 
 ## Overview
 
-**This repository contains seven scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global increase in GLOF size and focus on controls that limit increases in GLOF size**
+**This repository contains seven scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global and regional change in glacier lake area and focus on controls that limit increases in GLOF size**
 
 - [01_GLOF_preprocessing.R](#01_glof_preprocessingr)
 - [02_generate_glacier_buffers.R](#02_generate_glacier_buffersr)
