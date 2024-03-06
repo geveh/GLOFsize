@@ -146,7 +146,7 @@ Please visit the repository on Zenodo to obtain the input files.
 
 ## References
 
-Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite globally growing glacier lakes*. Submitted
+Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite worldwide growth of glacier lakes*. Submitted
 
 
 ## See also
