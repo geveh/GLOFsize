@@ -3,7 +3,7 @@
 
 ## Overview
 
-**This repository contains seven scripts to estimate trends in the volume (*V*<sub>0</sub>), peak discharge (*Q*<sub>p</sub>), timing (day of year *doy*), and source elevation (*Z*) of ice-dam failures on regional and local (i.e. lake-) level. In addition, we investigate the consequences of melting glacier dams on the magnitudes of GLOFs.**
+**This repository contains seven scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global increase in GLOF size and focus on controls that limit increases in GLOF size**
 
 - [01_GLOF_preprocessing.R](#01_glof_preprocessingr)
 - [02_generate_glacier_buffers.R](#02_generate_glacier_buffersr)
@@ -36,10 +36,9 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "glofdatabase_2023_12_06.ods" (table with all reported GLOFs. Compiliation as of December 06, 2023)
 - Randolph Glacier Inventory V6.0 (https://www.glims.org/RGI/rgi60_dl.html)
 
-
 *Main outputs*: 
 - "all_glofs_tibble.RDS" (R-object of all reported GLOFs in the global GLOF database; data are not trimmed to the period 1990-2023)
-- "la_sf.RDS" (All GLOFs with mapped lake areas before the outburst in the period 1990-2023)
+- "la_sf.RDS" (R-object containing all GLOFs with mapped lake areas before the outburst in the period 1990-2023)
 - "Qp_V0_plot.pdf" (Four-panel scatterplot of peak discharge and flood volumes versus lake area before the GLOF and GLOF-related losses in lake area) 
 
 ---
@@ -52,9 +51,9 @@ Each script will produce output in form of a figure (displayed in the associate 
 - The complete RGI V6.0 in ESRI shapefile format.
 
 *Main outputs*: 
-- "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions) 
+- "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions in ESRI shapefile format) 
 - "*RegionXYZ*_buffer.shp") (Buffers around glaciers for the 13 study regions in ESRI shapefile format)
-- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed)
+- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
 
 ---
 
@@ -63,30 +62,32 @@ Each script will produce output in form of a figure (displayed in the associate 
 **Script to calculate the regional GLOF rate, local glacier thicknesses and glacier length. Those diagnostics are compared to the size of burst lakes.**
 
 *Mandatory input data*: 
-- "all_glofs_tibble.RDS" (R-object with a preprocessed table of all reported GLOFs)
+- "la_sf.RDS" (R-object containing all GLOFs with mapped lake areas before the outburst in the period 1990-2023)
+- "RGI-wide_composites_stats_GV.txt" (A text table storing the mean thickness ("Hcomp") of each glacier glacier according to its RGIId. Data provided by Daniel Farinotti.)
+- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
+- 
 
 *Output*: 
-- "doy_trends_per_region.RDS" (R-object with regression models of *doy* versus time for all dated GLOFs in the six regions)
-- "doy_change.pdf" (Plot of the temporal trends in *doy* for each region, including the posterior differences in *doy* between 2021 and 1900)
-- "doy_trends_per_glacier.RDS"  (R-object with regression models of *doy* versus time for lakes with repeat GLOFs)
-- "doy_local.pdf" (Plot of local changes in *doy* versus time)
-- "post_trend_doy_per_lake.pdf"  (Plot of local  posterior differences in *doy* for each lake)
-
+- "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
+- "reported_GLOFs_with_geometry.rds" (R-object containing a *simple features* (sf) object of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
+- "reg_invs_bind.rds" (A table of all glaciers in each region that had an estimate of ice thickness)
+- "Lake_area_vs_all.pdf" (A three panel plot of GLOF rate, local glacier thickness, and glacier length versus GLOF size)
+  
 ---
 
-### 04_glacier_volumes_and_ice_loss.R
+### 04_Trends_in_GLOF_size.R
 
-**Script to obtain the total volumes of glaciers and their volume loss between 2000 and 2019 in 100-m elevation bins.**
+**Script to estimate trends in GLOF size between 1990 and 2023.**
 
-*Mandatory input data (Data sources from external repositories are provided in the script)*: 
-- Folder "Region_extents" (Contains the ESRI shapefile *Extent_pol.shp* to display the extent of the study regions)
-- Glacier outlines from the Randolph Glacier Inventory (RGI)
+*Mandatory input data*: 
+- "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
+- "*RegionXX*_rgi60_pergla_rates.csv" (Regional rate
 - Glacier surface DEMs from Farinotti et al. (2019)
 - Glacier volume DEMs from Farinotti et al. (2019)
 - Glacier elevation change data from Hugonnet et al. (2021)
 
 *Output*: 
-- "Regional_glacier_and_melt_volumes.rds" (R-object containing the total volume of glacier volume and volume change between 2000 and 2019 in 100-m elevation bins)
+- "regional_trends_ice_dammed_lakes.pdf" 
 
 ---
 
