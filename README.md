@@ -20,8 +20,8 @@ Please install both **R and RStudio** on your machine to successfully run the co
 The R codes depend on a number of packages, listed at the beginning of all scripts. Please install those packages before running the scripts. 
 The comments within the scripts provide further details on model dependencies and usage of functions. 
 
-Each script will call one or more input data object(s), which are available via ***Zenodo***.  
-We also use data on glacier outlines and previously published lake outlines. Please download the data from the web sources provided in the scripts.  
+Each script will call several input data objects, which are available via ***Zenodo***.  
+We also use data on glacier outlines, glacier thickness, glacier elevation changes, and previously published lake outlines. Please download the data from the web sources provided in the scripts.  
 Please put all input files into the same folder, and change the working directory (which is set at beginning of each the script) according to your folder structure. The scripts can be executed one after the other, with the user generating output that is used as input for the next script.
 The scripts (and parts thereof) can also be run independent of each other using the input files (in most cases *.RDS* files) from Zenodo.
 Each script will produce output in form of a figure (displayed in the associate manuscript and Extended Data figures) or R-objects.
@@ -81,13 +81,15 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 *Mandatory input data*: 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
-- "*RegionXX*_rgi60_pergla_rates.csv" (Regional rate
-- Glacier surface DEMs from Farinotti et al. (2019)
-- Glacier volume DEMs from Farinotti et al. (2019)
-- Glacier elevation change data from Hugonnet et al. (2021)
+- "*RegionXX*_rgi60_pergla_rates.csv" (Regional rate of glacier elevation change between 2000 and 2020, data are from Hugonnet et al., 2021, https://doi.org/10.6096/13)
 
 *Output*: 
-- "regional_trends_ice_dammed_lakes.pdf" 
+- "regional_trends_ice_dammed_lakes.pdf" (Figure showing the change in GLOF size from ice-dammed dammed lakes between 1990 and 2023 for each region)
+- "dhdt_vs_glacier_dammed_lake_area.pdf" (A two-panel figure showing the relationship between the trend in GLOF size and glacier elevation change)
+- "local_trends_idl.pdf" (A multi-panel figure showing the trend in GLOF size for all glacier-dammed lakes between 1990 and 2023)
+- "regional_trends_gs_mb.pdf" (A two-panel figure, each consisting of regional panels showing the trend in ice-dam and moraine-and bedrock-dam failures)
+- "Global_ice_moraine.pdf" (Figure showing the grand mean of trends in ice-dammed and supraglacial lakes, and moraine- and bedrock-dammed lakes between 1990 and 2023)
+- "Regional_trends.pdf" (Figure showing the marginal posterior distribution of GLOF size for every region in 1990 and 2023, distinguished by the two major dam types)
 
 ---
 
