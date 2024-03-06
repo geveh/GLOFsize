@@ -100,7 +100,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 *Mandatory input data*: 
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
 - Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
-- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously prublished glacier lake inventories, including reference to the underlying study, year, and satellite image used to map glacier lakes)
+- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously published glacier lake inventories, including reference to the underlying study, year, and satellite image used to map glacier lakes)
 
 *Outputs*: 
 - "UTMArea_XXX" (Glacier lake outlines split to the extent of the 13 study region. Individual lake areas are calculated in the local UTM projection)
