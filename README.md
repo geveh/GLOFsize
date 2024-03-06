@@ -1,5 +1,5 @@
 # GLOFsize
-# Code for *"Increasingly smaller outbursts despite globally growing glacier lakes"*
+# Code for *"Increasingly smaller outbursts despite worldwide growth of glacier lakes"*
 
 ## Overview
 
