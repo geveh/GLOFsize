@@ -1,23 +1,22 @@
 # GLOFsize
-# Code for *"Increasingly smaller outbursts despite worldwide growth of glacier lakes"*
+# Code for *"Progressively smaller outbursts despite worldwide growth of glacier lakes"*
 
 ## Overview
 
-**This repository contains seven scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global and regional change in glacier lake area and focus on controls that limit increases in GLOF size**
+**This repository contains six scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global and regional change in glacier lake area and focus on controls that limit increases in GLOF size**
 
 - [01_GLOF_preprocessing.R](#01_glof_preprocessingr)
 - [02_generate_glacier_buffers.R](#02_generate_glacier_buffersr)
 - [03_GLOF_rate_ice_thickness_and_length.R](#03_glof_rate_ice_thickness_and_lengthr)
 - [04_Trends_in_GLOF_size.R](#04_trends_in_glof_sizer)
 - [05_Rates_of_lake_growth.R](#05_rates_of_lake_growthr)
-- [06_Burst_lakes_and_their_neighbors.R](#06_burst_lakes_and_their_neighborsr)
-- [07_Limits_to_increasing_GLOF_sizes.R](#07_limits_to_increasing_glof_sizesr)
+- [06_Limits_to_increasing_GLOF_sizes.R](#07_limits_to_increasing_glof_sizesr)
 
 The codes are written in the statistical programming language **R** (https://www.r-project.org/), Version 4.2.2, and called within
 the Graphical User Interface **RStudio** (https://posit.co/downloads/) under a Microsoft Windows 10 operating system. 
 Please install both **R and RStudio** on your machine to successfully run the codes and produce figures and R data objects.
 
-The R codes depend on a number of packages, listed at the beginning of all scripts. Please install those packages before running the scripts. 
+The **R** codes depend on a number of packages, listed at the beginning of all scripts. Please install those packages before running the scripts. 
 The comments within the scripts provide further details on model dependencies and usage of functions. 
 
 Each script will call several input data objects, which are available via ***Zenodo***.  
@@ -53,7 +52,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 *Outputs*: 
 - "rgiO2_dissolved_outlines.shp" (Merged outlines of the RGI O2 according to the 13 study regions in ESRI shapefile format) 
 - "*RegionXYZ*_buffer.shp" (Separate buffers around glaciers for the 13 study regions in ESRI shapefile format)
-- "dissolved_buffer.shp" / "dissolved_buffer.RDS" (All buffers around glaciers as one ESRI shapefile / R-object)
+- "dissolved_buffer.shp" / "dissolved_buffer.RDS" (All buffers around glaciers as a single ESRI shapefile / R-object)
 - "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
 
 ---
@@ -99,8 +98,6 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 *Mandatory input data*: 
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
-- Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
-- "Glacier_lakes_global.ods" (OpenOffice spreadsheet of previously published glacier lake inventories, including reference to the underlying study, year, and satellite image used to map glacier lakes)
 
 *Outputs*: 
 - "UTMArea_XXX" (Glacier lake outlines split to the extent of the 13 study region. Individual lake areas are calculated in the local UTM projection)
@@ -109,32 +106,16 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 ---
 
-### 06_Burst_lakes_and_their_neighbors.R
-
-**Script to calculate distances between burst lakes and their neighbours.**
-
-*Mandatory input data*: 
-- "glacier_buffers_split_by_O2_no_fid_correct_FULLNAME_2.gpkg" (A slightly manually corrected version of the regional glacier buffers with overlapping buffers removed in geopackage format)
-- "reported_GLOFs_with_geometry.rds" (R-object containing a *simple features* (sf) object of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
-- Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
-
-*Output*: 
-
-- "distances_plot.pdf" (Figure showing the distances to the next intact glacier lake per region) 
-
----
-
-### 07_Limits_to_increasing_GLOF_sizes.R
+### 06_Limits_to_increasing_GLOF_sizes.R
 
 **Script to extract all lakes >1km² from previous lake inventories and assess limits to increasing GLOF sizes.**
 
 *Mandatory input data*: 
 - Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
-- "lakes_gt_1km.gpkg" (All lakes >1km² as of 2015 or later, labelled with descriptors of their geometries)
+- "Zhang_lakes_2020_gt1km_join_region.gpkg" (All lakes >1km² as of 2020, labelled with descriptors of their geometries)
 
 *Output*: 
 
-- "lakes_gt_1km.gpkg" (All lakes >1km² as of 2015 or later, need to be manually labelled with their geometric properties)
 - "glof_predictors_plot.pdf" (Figure showing the geometric characteristics of lakes >1 km²) 
 
 ---
@@ -146,12 +127,12 @@ Please visit the repository on Zenodo to obtain the input files.
 
 ## References
 
-Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, Oliver Korup, and John J. Clague: *Increasingly smaller outbursts despite worldwide growth of glacier lakes*. Submitted
+Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, John J. Clague and Oliver Korup: *Progressively smaller outbursts despite worldwide growth of glacier lakes*. Under review at *Nature Water*.
 
 
 ## See also
 
-[The Glacier Lake Outburst Flood Database V4.0](http://glofs.geoecology.uni-potsdam.de)
+[The Glacier Lake Outburst Flood Database V4.1](http://glofs.geoecology.uni-potsdam.de)
 
 ## Contact
 
