@@ -3,7 +3,7 @@
 
 ## Overview
 
-**This repository contains six scripts to estimate trends in GLOF size between 1990 and 2023. In addition, we investigate the global and regional change in glacier lake area and focus on controls that limit increases in GLOF size**
+**This repository contains six scripts to estimate trends in pre-GLOF lake area between 1990 and 2023. In addition, we investigate the global and regional change in glacier lake area and focus on controls that limit increases in pre-GLOF lake area**
 
 - [01_GLOF_preprocessing.R](#01_glof_preprocessingr)
 - [02_generate_glacier_buffers.R](#02_generate_glacier_buffersr)
@@ -70,25 +70,25 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "reported_GLOFs_with_geometry.rds" (R-object containing a *simple features* (sf) object of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "reg_invs_bind.rds" (A table of all glaciers in each region that had an estimate of ice thickness)
-- "Lake_area_vs_all.pdf" (A three panel plot of GLOF rate, local glacier thickness, and glacier length versus GLOF size)
+- "Lake_area_vs_all.pdf" (A three panel plot of GLOF rate, local glacier thickness, and glacier length versus pre-GLOF lake area)
   
 ---
 
 ### 04_Trends_in_GLOF_size.R
 
-**Script to estimate trends in GLOF size between 1990 and 2023.**
+**Script to estimate trends in pre-GLOF lake area between 1990 and 2023.**
 
 *Mandatory input data*: 
 - "reported_GLOFs.rds" (R-object containing a table of reported GLOFs in the period 1990-2023 with machine readable names of glaciers and lakes)
 - "*RegionXX*_rgi60_pergla_rates.csv" (Regional rate of glacier elevation change between 2000 and 2020, data are from Hugonnet et al., 2021, https://doi.org/10.6096/13)
 
 *Outputs*: 
-- "regional_trends_ice_dammed_lakes.pdf" (Figure showing the change in GLOF size from ice-dammed dammed lakes between 1990 and 2023 for each region)
-- "dhdt_vs_glacier_dammed_lake_area.pdf" (A two-panel figure showing the relationship between the trend in GLOF size and glacier elevation change)
-- "local_trends_idl.pdf" (A multi-panel figure showing the trend in GLOF size for all glacier-dammed lakes between 1990 and 2023)
+- "regional_trends_ice_dammed_lakes.pdf" (Figure showing the change in pre-GLOF lake area from ice-dammed dammed lakes between 1990 and 2023 for each region)
+- "dhdt_vs_glacier_dammed_lake_area.pdf" (A two-panel figure showing the relationship between the trend in pre-GLOF lake area and glacier elevation change)
+- "local_trends_idl.pdf" (A multi-panel figure showing the trend in pre-GLOF lake area for all glacier-dammed lakes between 1990 and 2023)
 - "regional_trends_gs_mb.pdf" (A two-panel figure, each consisting of regional panels showing the trend in ice-dam and moraine-and bedrock-dam failures)
 - "Global_ice_moraine.pdf" (Figure showing the grand mean of trends in ice-dammed and supraglacial lakes, and moraine- and bedrock-dammed lakes between 1990 and 2023)
-- "Regional_trends.pdf" (Figure showing the marginal posterior distribution of GLOF size for every region in 1990 and 2023, distinguished by the two major dam types)
+- "Regional_trends.pdf" (Figure showing the marginal posterior distribution of pre-GLOF lake area for every region in 1990 and 2023, distinguished by the two major dam types)
 
 ---
 
@@ -108,7 +108,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 ### 06_Limits_to_increasing_GLOF_sizes.R
 
-**Script to extract all lakes >1km² from previous lake inventories and assess limits to increasing GLOF sizes.**
+**Script to extract all lakes >1km² from previous lake inventories and assess limits to increasing pre-GLOF lake areas.**
 
 *Mandatory input data*: 
 - Outlines of glacier lakes from previous lake inventories (We do not share these data because they might be subject to different licenses. Please contact the authors)
