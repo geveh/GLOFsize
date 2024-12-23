@@ -4,6 +4,7 @@
 #######                                                                   ######
 #######                            by Georg Veh                           ######
 #######             checked and comments added March 04, 2024             ######
+#######                     checked again Dec 23, 2024                    ######
 ################################################################################
 
 # Load the following packages, or use install.packages("nameofpackage"), if some 
