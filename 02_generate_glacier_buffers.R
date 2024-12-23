@@ -2,6 +2,7 @@
 #######         Draw 5-km buffers around glaciers in the RGI 6.0          ######
 #######                                                                   ######
 #######             checked and comments added March 04, 2024             ######
+#######                   checked again Dec 23, 2024                      ######
 ################################################################################
 
 # Load the following packages, or use install.packages("nameofpackage"), if some 
