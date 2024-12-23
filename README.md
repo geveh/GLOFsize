@@ -99,6 +99,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 
 *Mandatory input data*: 
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
+- Glacier lake inventory by Zhang et al. (2024), https://doi.org/10.11888/Cryos.tpdc.300938 
 
 *Outputs*: 
 - "lakes_per_region.rds" (R-object of rates of lake growth in each region)
