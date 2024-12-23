@@ -3,6 +3,7 @@
 #######                                                                   ######
 #######                            by Georg Veh                           ######
 #######                checked and comments added March 04, 2024          ######
+#######  checked again, drainage ratio and comments added, Dec 23, 2024   ######
 ################################################################################
 
 # Load the following packages, or use install.packages("nameofpackage"), if some 
@@ -65,7 +66,6 @@ gs <- rep.glof %>%
                                            unique(grep("Himalayas", RegO2_adj_f2, value = T)),
                                            unique(grep("Tibet and Hengduan Shan", RegO2_adj_f2, value = T)))))
 
-
 # We set weakly informed priors on the model intercept, slopes, group-level 
 # standard and residual standard deviations.
 
@@ -109,14 +109,16 @@ pp_check(mod.gs)
 # expected mean of the posterior distribution. For each time step, we obtain
 # 1500 draws, and convert the standardised data back to the original scale.
 
+gs.scaled.years <- (seq_range(c(1990, 2023), n = 100) - mean(gs$rounded_year)) / sd(gs$rounded_year)
+
 pred.grid.gs.grand <- add_epred_draws(
   object = mod.gs, 
-  newdata = data.frame(year_scale = seq_range(gs$year_scale, n = 100)),
+  newdata = data.frame(year_scale = gs.scaled.years),
   value = "area_scale", 
   ndraws = 1500,
   re_formula = NA) %>%
   ungroup() %>%
-  mutate(rounded_year = (year_scale * sd(gs$rounded_year)) +mean(gs$rounded_year),
+  mutate(rounded_year = (year_scale * sd(gs$rounded_year)) + mean(gs$rounded_year),
          Lake_area_before = 10^((area_scale * sd(log10(gs$Lake_area_before))) + mean(log10(gs$Lake_area_before))),
          Lake_type_simple = "glacier_supraglacial") 
 
@@ -135,7 +137,7 @@ plot.trend.grand.mean.gs <- pred.grid.gs.grand %>%
   theme( axis.text   = element_text(size = 7),
          axis.text.x = element_text(size = 7),
          axis.title  = element_text(size = 7),
-         strip.text  = element_text(size = 7))  + 
+         strip.text  = element_text(size = 7))  +
   scale_y_continuous(trans  = log10_trans(),
                      breaks = trans_breaks("log10", function(x) 10^x),
                      labels = trans_format("log10", math_format(10^.x)))
@@ -219,7 +221,7 @@ pred.grid.regions.gs.o <- add_epred_draws(
   newdata = pred.grid.regions.gs,
   value = "area_scale", 
   ndraws = 500,
-  re_formula =  ~  year_scale + (year_scale | RegO2_adj_f)) %>%
+  re_formula =  ~ year_scale + (year_scale | RegO2_adj_f)) %>%
   mutate(rounded_year = (year_scale * sd(gs$rounded_year)) + mean(gs$rounded_year),
          Lake_area_before = 10^((area_scale * sd(log10(gs$Lake_area_before))) + mean(log10(gs$Lake_area_before))),
          Lake_type_simple = "glacier_supraglacial") 
@@ -437,7 +439,7 @@ dhdt.vs.la.gs.boxplot <- summary.with.dhdt %>%
 
 dhdt.total <- ggarrange(dhdt.vs.la.gs, dhdt.vs.la.gs.boxplot,
                         ncol = 2,
-                        labels = c("A", "B"),
+                        labels = c("a", "b"),
                         align = "hv",
                         font.label = list(size = 8,
                                           color = "black",
@@ -454,8 +456,8 @@ ggsave(filename = "dhdt_vs_glacier_dammed_lake_area.pdf",
 
 ################################################################################
 
-# We also want to draw the trend in GLOF size for each lake that had repeated
-# outbursts. 
+# We also want to draw the trend in pre-GLOF lake area for each lake that had 
+# repeated outbursts. 
 
 # We derive a range of time steps for each lake, for which we want to draw
 # samples from the expected posterior distribution.
@@ -542,9 +544,13 @@ plot.trend.local.gs <- preds.sub.gs  %>%
                      breaks = trans_breaks("log10", function(x) 10^x),
                      labels = trans_format("log10", math_format(10^.x)))
 
-# Write this plot to disk (Extended Data Figure 3)
+# Write this plot to disk (Extended Data Figure 3).
 
-# ggsave("local_trends_idl.pdf", plot.trend.local.gs, width = 180, height = 509, units = "mm")
+# ggsave("local_trends_idl.pdf",
+#        plot.trend.local.gs, 
+#        width = 180, 
+#        height = 509, 
+#        units = "mm")
 
 ################################################################################
 ### Trends in size of burst moraine- and bedrock-dammed lakes ##################
@@ -575,7 +581,8 @@ mb <- rep.glof %>%
                                            unique(grep("Hissar Alay and Tien Shan", RegO2_adj_f2, value = T)),
                                            unique(grep("HK Pamir Karakoram", RegO2_adj_f2, value = T)),
                                            unique(grep("Himalayas", RegO2_adj_f2, value = T)),
-                                           unique(grep("Tibet and Hengduan Shan", RegO2_adj_f2, value = T)))))
+                                           unique(grep("Tibet and Hengduan Shan", RegO2_adj_f2, value = T))))) %>%
+  ungroup()
 
 # Set weakly informed priors on standardised data.
 
@@ -615,7 +622,7 @@ mb.scaled.years <- (seq_range(c(1990, 2023), n = 100) - mean(mb$rounded_year)) /
 
 # After drawing samples, we convert the data to the original scale.
 
-pred.grid.grand.mb <-  add_epred_draws(
+pred.grid.grand.mb <- add_epred_draws(
   object = mod.mb, 
   newdata = data.frame(year_scale = mb.scaled.years),
   value = "area_scale", 
@@ -625,7 +632,7 @@ pred.grid.grand.mb <-  add_epred_draws(
   mutate(rounded_year = (year_scale * sd(mb$rounded_year)) + mean(mb$rounded_year),
          Lake_area_before = 10^((area_scale * sd(log10(mb$Lake_area_before))) + mean(log10(mb$Lake_area_before))),
          Lake_type_simple = "moraine_bedrock") 
-
+  
 # We plot the trend of the grand mean, i.e. the population level.
 
 plot.trend.grand.mean.mb <- pred.grid.grand.mb %>%
@@ -775,7 +782,7 @@ regional.trends.gs.mb <- ggarrange(plot.trend.year.regions.gs,
                                    plot.trend.year.regions.mb,
                                    ncol = 1,
                                    nrow = 2,
-                                   labels = c("A", "B"),
+                                   labels = c("a", "b"),
                                    align = "hv",
                                    font.label = list(size = 8,
                                                      color = "black",
@@ -796,7 +803,7 @@ ggsave(filename = "regional_trends_gs_mb.pdf",
 
 pred.grids.all.grand <- rbind(pred.grid.gs.grand, 
                               pred.grid.grand.mb) %>%
-  mutate(RegO2_adj_f = "Global")
+  mutate(RegO2_adj_f = "All regions")
 
 # And we plot the two trends in two different colors.
 
@@ -824,7 +831,8 @@ p <- ggplot(data = rep.glof,
          legend.position = "none")
 
 # We add a marginal histogram to emphasize the difference in lake size before
-# the outburst for ice-dammed lakes in contrast to moraine- and bedrock-dammed lakes.
+# the outburst for ice-dammed lakes in contrast to moraine- and bedrock-dammed 
+# lakes.
 
 p.mar <- ggMarginal(p, 
                     groupColour = TRUE, 
@@ -851,7 +859,7 @@ samp.size <- rep.glof %>%
   rename(n_gs = "glacier_supraglacial",
          n_mb = "moraine_bedrock") %>%
   ungroup() %>%
-  add_row(RegO2_adj_f = "Global",
+  add_row(RegO2_adj_f = "All regions",
           n_gs = nrow(rep.glof %>% dplyr::filter(Lake_type_simple == "glacier_supraglacial")),
           n_mb = nrow(rep.glof %>% dplyr::filter(Lake_type_simple == "moraine_bedrock")))
 
@@ -868,7 +876,7 @@ regional.trends <- rbind(pred.grid.regions.gs.o %>% ungroup(),
   mutate(RegO2_adj_f = str_replace_all(RegO2_adj_f, "_", " ")) %>%
   mutate(RegO2_adj_f = str_replace_all(RegO2_adj_f, "Alaska Range", "Alaska Range (ALR)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "W Chugach Mountains", "W Chugach Mountains (WCM)"),
-         RegO2_adj_f = str_replace_all(RegO2_adj_f, "Saint Elias Mountains", "Alaska Range (ALR)"),
+         RegO2_adj_f = str_replace_all(RegO2_adj_f, "Saint Elias Mountains", "Saint Elias Mountains (SEM)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "Coast Ranges", "Coast Ranges (COR)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "C and N Andes", "C and N Andes (CNA)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "Patagonia", "Patagonia (PAT)"),
@@ -879,9 +887,9 @@ regional.trends <- rbind(pred.grid.regions.gs.o %>% ungroup(),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "HK Pamir Karakoram", "HK Pamir Karakoram (HKPK)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "Tibet and Hengduan Shan", "Tibet and Hengduan Shan (THS)"),
          RegO2_adj_f = str_replace_all(RegO2_adj_f, "Himalayas", "Himalayas (HIM)")) %>%
-  mutate(RegO2_adj_f = paste0(RegO2_adj_f, " (", n_gs, " | ", n_mb, ")")) %>%
+  mutate(RegO2_adj_f = paste0(RegO2_adj_f, " (", n_mb, " | ", n_gs, ")")) %>%
   mutate(RegO2_adj_f_n = factor(RegO2_adj_f, 
-                                levels = c(unique(grep("Global", RegO2_adj_f, value = T)),
+                                levels = c(unique(grep("All regions", RegO2_adj_f, value = T)),
                                            unique(grep("Alaska Range", RegO2_adj_f, value = T)),
                                            unique(grep("W Chugach Mountains", RegO2_adj_f, value = T)),
                                            unique(grep("Saint Elias Mountains", RegO2_adj_f, value = T)),
@@ -928,4 +936,176 @@ ggsave("Regional_trends.pdf",
        regional.trends, 
        width = 95, 
        height = 170, 
+       units = "mm")
+
+################################################################################
+### Drainage ratio #############################################################
+
+# How many moraine- and bedrock-dammed lakes remain a hazard potential because 
+# they have not (yet) drained completely?
+
+(rep.glof %>% 
+  filter(!is.na(Lake_area_after),
+         Lake_area_after > 0, 
+         Lake_type_simple == "moraine_bedrock") %>%
+   nrow()) / 
+  (rep.glof %>% 
+     filter(!is.na(Lake_area_after), 
+            Lake_type_simple == "moraine_bedrock") %>% 
+     nrow()) 
+
+
+rep.glof %>%
+  mutate(drainage_ratio = ((Lake_area_before - Lake_area_after)/Lake_area_before)*100) %>%
+  group_by(Lake_type_simple) %>% 
+  filter(glacier_and_lake != "NA_unknown",
+         drainage_ratio >= 0) %>%
+  summarise(med_drain = median(drainage_ratio, na.rm = T),
+            p25 = quantile(drainage_ratio, 0.25, na.rm = T),
+            p75 = quantile(drainage_ratio, 0.75, na.rm = T))
+
+
+# We select all moraine- and bedrock-dammed lakes and calculate their drainage 
+# ratio, that is the percentage decrease in lake area (lake area before 
+# minus lake area after) due to the outburst.
+# To calculate a temporal trend in drainage ratio with time, we scale the drainage
+# ratio and the year of the GLOF.
+
+mb.drainage.ratio <- rep.glof %>%
+  mutate(drainage_ratio = ((Lake_area_before - Lake_area_after)/Lake_area_before)*100) %>%
+  filter(glacier_and_lake != "NA_unknown",
+         drainage_ratio >= 0,
+         Lake_type_simple == "moraine_bedrock",
+         Lake_area_before < 2 * 10^7) %>%
+  mutate(drainage_ratio_scale = scale_this(drainage_ratio),
+         Lake_area_before_scale = scale_this(Lake_area_before),
+         la_diff_scale = scale_this(la_diff),
+         year_scale = scale_this(rounded_year),
+         area_scale = scale_this(Lake_area_before))
+
+bprior <- prior(student_t(3, 0, 2), class = "b") +
+  prior(student_t(3, 0, 2), class = "Intercept")
+
+################
+
+# We first derive a model that calculates the temporal trend in the difference in lake area
+# before and after GLOF (in km²). 
+
+mod.la.diff <- brm(la_diff_scale ~ year_scale ,
+              data = mb.drainage.ratio,
+              family = student(), 
+              warmup  = 1000,
+              iter = 4000,
+              prior = bprior,
+              chains  = 4,
+              cores   = 4, 
+              control = list(adapt_delta = 0.95,
+                             max_treedepth = 15),
+              backend = "cmdstanr",
+              threads = threading(3))
+
+# Show the summary of the model. 
+
+mod.la.diff 
+plot(mod.la.diff )
+
+pp_check(mod.la.diff)
+
+pred.grid.mb.diff.la.grand <- add_epred_draws(
+  object = mod.la.diff , 
+  newdata = data.frame(year_scale = seq_range(mb.drainage.ratio$year_scale, n = 100)),
+  value = "la_diff_scale", 
+  ndraws = 1500,
+  re_formula = NA) %>%
+  ungroup() %>%
+  mutate(rounded_year = (year_scale * sd(mb.drainage.ratio$rounded_year)) + mean(mb.drainage.ratio$rounded_year),
+         la_diff = (la_diff_scale * sd(mb.drainage.ratio$la_diff)) + mean(mb.drainage.ratio$la_diff)) 
+
+# Plot the trend in the decrease in lake area with time.
+
+plot.trend.mb.diff.la.grand <- pred.grid.mb.diff.la.grand  %>%
+  ggplot(aes(x = rounded_year, y = la_diff)) +
+  scale_fill_manual(name = "Posterior rate", values = "#ee7600") +
+  stat_lineribbon(aes( y = la_diff), .width = 0.95,
+                  point_interval = mean_qi) +
+  geom_point(data = mb.drainage.ratio %>% filter(la_diff < 0.5),
+             aes(x = rounded_year, y = la_diff)) +
+  theme_bw() +
+  labs(x = "Year",
+       y = "Difference in lake area before and after the GLOF [km²]") +
+  theme( axis.text   = element_text(size = 7),
+         axis.text.x = element_text(size = 7),
+         axis.title  = element_text(size = 7),
+         strip.text  = element_text(size = 7),
+         legend.position = "none")  
+
+#################
+
+# We then fit a model that calculates the temporal trend in the drainage ratio. 
+
+mod.drainage.ratio <- brm(drainage_ratio_scale ~ area_scale ,
+                   data = mb.drainage.ratio,
+                   family = student(), 
+                   warmup  = 1000,
+                   iter = 4000,
+                   prior = bprior,
+                   chains  = 4,
+                   cores   = 4, 
+                   control = list(adapt_delta = 0.95,
+                                  max_treedepth = 15),
+                   backend = "cmdstanr",
+                   threads = threading(3))
+
+# Show the summary of the model. 
+
+mod.drainage.ratio 
+plot(mod.drainage.ratio )
+
+pp_check(mod.drainage.ratio)
+
+pred.grid.mb.drainage.ratio.grand <- add_epred_draws(
+  object = mod.drainage.ratio , 
+  newdata = data.frame(area_scale = seq_range(mb.drainage.ratio$area_scale, n = 100)),
+  value = "drainage_ratio_scale", 
+  ndraws = 1500,
+  re_formula = NA) %>%
+  ungroup() %>%
+  mutate(Lake_area_before = (area_scale * sd(mb.drainage.ratio$Lake_area_before)) + mean(mb.drainage.ratio$Lake_area_before),
+         drainage_ratio = (drainage_ratio_scale * sd(mb.drainage.ratio$drainage_ratio)) + mean(mb.drainage.ratio$drainage_ratio)) 
+
+# Plot the trend in the drainage ratio.
+
+plot.trend.mb.drainage.ratio.grand <- pred.grid.mb.drainage.ratio.grand  %>%
+  ggplot(aes(x = Lake_area_before, y = drainage_ratio)) +
+  scale_fill_manual(name = "Posterior rate", values = "#ee7600") +
+  stat_lineribbon(aes( y = drainage_ratio), .width = 0.95,
+                  point_interval = mean_qi) +
+  geom_point(data = mb.drainage.ratio,
+             aes(x = Lake_area_before, y = drainage_ratio)) +
+  theme_bw() +
+  labs(x = "Lake area before the GLOF",
+       y = "Drainage ratio [% drained lake area]") +
+  theme( axis.text   = element_text(size = 7),
+         axis.text.x = element_text(size = 7),
+         axis.title  = element_text(size = 7),
+         strip.text  = element_text(size = 7),
+         legend.position = "none")  + 
+  xlim(c(3000, 1000000))
+
+# Combine both plots, i.e. the decrease in lake area and the drainage ratio.
+
+drainage.ratio.plot <- ggarrange(plot.trend.mb.diff.la.grand, 
+          plot.trend.mb.drainage.ratio.grand ,
+          ncol = 2,
+          labels = c("a", "b"),
+          align = "hv",
+          font.label = list(size = 10,
+                            color = "black",
+                            face = "plain"),
+          widths = c(1, 1))
+
+ggsave(filename = "drainage_ratio_plot.pdf",
+       plot     = drainage.ratio.plot,
+       width = 160,
+       height = 80,
        units = "mm")
