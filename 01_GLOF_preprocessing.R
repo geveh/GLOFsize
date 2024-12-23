@@ -5,7 +5,8 @@
 #######                            by Georg Veh                           ######
 #######                           March 28, 2023                          ######
 #######                       revised Oct 26, 2023                        ######
-#######                checked and comments added March 04, 2024          ######
+#######                checked and comments added, March 04, 2024         ######
+#######                checked and final revisions, Dec 23 2024           ######
 ################################################################################
 
 # Load the following packages, or use install.packages("nameofpackage"), if some 
@@ -42,7 +43,7 @@ scale_this <- function(x){
 # Tell R the name of the open-office spreadsheet that contains reported GLOFs per 
 # region in separate sheets.
 
-glof.file <- "glofdatabase_2023_12_06.ods"
+glof.file <- "glofdatabase_2024_10_21.ods"
 
 # Get names of the sheets in the Open Office document. 
 # Exclude 'Global', 'Other', and 'Greenland'.
@@ -253,7 +254,8 @@ la.sf <- la.sf[!sapply(la.sf, is.null)]
 la.sf <- do.call(rbind, la.sf)
 
 # Some regions have only few lakes and reported outbursts. We group them
-# to 13 larger regions.
+# to 13 larger regions. To this end, we manually relabel some of the original 
+# O2 regions in the RGI.
 
 la.sf <- la.sf %>%
   filter(RegO2 != "Svalbard") %>%
@@ -337,7 +339,8 @@ la.sf.global.regional.nona <- la.sf.all %>%
                                     "Moraine & bedrock")) 
 
 # We write a geopackage to disk that contains the largest reported GLOF per site.
-# This file is part of figure 1 (i.e. the open circles).
+# This file is part of figure 1 (i.e. the open circles). Uncomment those lines,
+# if you would like to write this geopackage to your disk.
 
 # la.sf.all %>%
 #   filter(!is.na(Lake_area_before)) %>%
@@ -351,7 +354,7 @@ la.sf.global.regional.nona <- la.sf.all %>%
 #   group_by(RGI_Glacier_Id, Lake, Lake_type_simple) %>%
 #   summarise(n = n(),
 #             max_a = max(Lake_area_before)) %>%
-#   st_write(dsn = "Max_area_and_number_per_lake.gpkg", delete_dsn = T)
+#   st_write(dsn = "Max_area_and_number_per_lake_2.gpkg", delete_dsn = T)
 
 # We load a shapefile that contains the outlines of the 13 (partly dissolved) 
 # RGI regions. 
@@ -408,7 +411,7 @@ counts.global <- la.sf.all %>%
 #   replace_na(list(n_global = 0, n_glac_sup = 0, n_mor_bed = 0)) %>%
 #   st_centroid() %>%
 #   rbind(counts.global) %>%
-#   st_write("Counts_per_region.gpkg",
+#   st_write("Counts_per_region2.gpkg",
 #            delete_dsn = T)
 
 ################################################################################
@@ -520,7 +523,6 @@ la.sf.nona.after %>%
             n0 = sum(Lake_area_after == 0)) %>%
   mutate(ratio = (n0/n)*100 )
 
-
 # Number of GLOFs first reported by us
 
 all.refs <- table(la.sf.nona.before$Reference) 
@@ -593,7 +595,7 @@ table(la.sf.nona.after$Certainty_level_after)
 # Lakes with repeated outbursts
 
 la.sf.global.regional.nona %>%
-  filter(region != "Global") %>%
+  filter(RegO2_adj_f != "Global") %>%
   mutate(Glacier_and_lake = paste0(RGI_Glacier_Id, "_", Lake)) %>%
   group_by(Glacier_and_lake) %>%
   summarise(nobs = n()) %>%
@@ -669,7 +671,6 @@ V0 <- all.glofs %>%
          la_log_scale = scale_this(la_log),
          la_diff_log_scale = scale_this(la_diff_log),
          V0_log_scale = scale_this(V0_log))
-
 
 # From all reported GLOFs, we extract only those that have both a reported 
 # peak discharge (Qp) and a mapped lake area before the GLOF.
@@ -957,7 +958,7 @@ Qp.V0.plot <- ggpubr::ggarrange(plot.V0.la, plot.V0.la.diff,
                                 plot.Qp.la, plot.Qp.la.diff, 
                                 ncol = 2,
                                 nrow = 2,
-                                labels = c("A", "B", "C", "D"),
+                                labels = c("a", "b", "c", "d"),
                                 align = "hv",
                                 font.label = list(size = 8,
                                                   color = "black",
