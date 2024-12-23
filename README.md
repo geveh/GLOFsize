@@ -89,6 +89,7 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "regional_trends_gs_mb.pdf" (A two-panel figure, each consisting of regional panels showing the trend in ice-dam and moraine-and bedrock-dam failures)
 - "Global_ice_moraine.pdf" (Figure showing the grand mean of trends in ice-dammed and supraglacial lakes, and moraine- and bedrock-dammed lakes between 1990 and 2023)
 - "Regional_trends.pdf" (Figure showing the marginal posterior distribution of pre-GLOF lake area for every region in 1990 and 2023, distinguished by the two major dam types)
+- ""drainage_ratio_plot.pdf" (Two-panel figure showing the difference in lake area due to the GLOF [in km²], and the drainage ratio [in %] with time)
 
 ---
 
@@ -100,7 +101,6 @@ Each script will produce output in form of a figure (displayed in the associate 
 - "dissolved_buffer.shp" (All buffers around glaciers as one ESRI shapefile)
 
 *Outputs*: 
-- "UTMArea_XXX" (Glacier lake outlines split to the extent of the 13 study region. Individual lake areas are calculated in the local UTM projection)
 - "lakes_per_region.rds" (R-object of rates of lake growth in each region)
 - "lake_area_change.pdf" (Figure showing the rate of lake area change in each region)
 
