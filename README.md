@@ -1,4 +1,4 @@
-# *GLOFsize*: R-scripts for *"Progressively smaller outbursts despite worldwide growth of glacier lakes"*
+# *GLOFsize*: R-scripts for *"Progressively smaller glacier lake outburst floods despite worldwide growth in lake area"*
 
 ## Overview
 
@@ -127,7 +127,7 @@ Please visit the repository on Zenodo to obtain the input files.
 
 ## References
 
-Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, John J. Clague and Oliver Korup: *Progressively smaller outbursts despite worldwide growth of glacier lakes*. Under review at *Nature Water*.
+Georg Veh, Björn G. Wang, Anika Zirzow, Christoph Schmidt, Natalie Lützow, Frederic Steppat, Guoqing Zhang, Kristin Vogel, Marten Geertsema, John J. Clague and Oliver Korup: *Progressively smaller glacier lake outburst floods despite worldwide growth in lake area*. *Nature Water* (2025), https://doi.org/10.1038/s44221-025-00388-w
 
 
 ## See also
